@@ -9,7 +9,7 @@ Author: Habb0n and Neon
 
 Last modified: November 2016
 
-Version: 1.3
+Version: 1.4
 
 Github: https://github.com/GooogIe and 
 """
@@ -18,6 +18,7 @@ Github: https://github.com/GooogIe and
 import Skype4Py
 import Utils
 import os
+import updater
 from os import listdir
 from os.path import isfile, join
 import sys
@@ -28,16 +29,20 @@ sys.dont_write_bytecode = True
 #Skype instance
 skype = Skype4Py.Skype()
 
+#Version
+ver = 1.4
+
 #Bot class
 class Bot:
     #Constructor method
-    def __init__(self, name,version,trigger):
+    def __init__(self, name,version,trigger,debug):
         self.name = name
         self.version = version
         self.trigger = trigger
         self.plugins = []
 	self.os = os.name
-	self.config = { "Name":self.name,"Version":self.version,"Trigger":self.trigger}
+	self.debug = debug
+	self.config = { "Name":self.name,"Version":self.version,"Debug":self.debug,"Trigger":self.trigger}
 	Utils.savefile("Config.json",self.config)
 	if os == 'nt':
 		self.plugindir = os.getcwd()+"\Plugins"
@@ -53,13 +58,23 @@ class Bot:
 	self.name = name
 	Utils.savefile("Config.json",self.config)
 
-    def getname(self):
-	return self.name
-
     def settrigger(self,trigger):
 	self.config["Trigger"] = trigger
 	self.trigger = trigger
 	Utils.savefile("Config.json",self.config)
+
+    def setversion(self,version):
+	self.config["Version"] = version
+	self.version = version
+	Utils.savefile("Config.txt",self.config)
+
+    def setdebug(self,debug):
+	self.config["Debug"] = debug
+	self.debug = debug
+	Utils.savefile("Config.txt",self.config)
+
+    def getname(self):
+	return self.name
 
     def gettrigger(self):
 	return self.trigger
@@ -67,10 +82,8 @@ class Bot:
     def getversion(self):
 	return self.version
 
-    def setversion(self,version):
-	self.config["Version"] = version
-	self.version = version
-	Utils.savefile("Config.txt",self.config)
+    def getdebug(self):
+	return self.debug
 
     def getplugins(self):
 	return Utils.Cafe+",".join(self.plugins)
@@ -115,11 +128,14 @@ class Bot:
 		cmd = cmd.split(" ")
 		if cmd[0] in self.plugins:
 			Utils.action("User "+senderHandle+" performed "+cmd[0])
-			try:
+			if self.debug == "False":
+				try:
+					send(self.callplugin(cmd))
+				except:
+					Utils.alert("Error while performing "+cmd[0]+" ("+senderHandle+")")
+					send("[#] Error while performing "+cmd[0]+" ("+senderHandle+")")
+			else:
 				send(self.callplugin(cmd))
-			except:
-				alert("Error while performing "+cmd[0]+" ("+senderHandle+")")
-				send("[#] Error while performing "+cmd[0]+" ("+senderHandle+")")
 		else:
 			send("[#] No plugin found for "+cmd[0]+", use "+self.trigger+"help, to get a list of available commands.")
 			Utils.alert("No plugin found("+cmd[0]+")")
@@ -131,11 +147,13 @@ def main():
 		trigger = configs["Trigger"]
 		name = configs["Name"]
 		version = configs["Version"]
-		myBot = Bot(name,version,trigger)
+		debug = configs["Debug"]
+		myBot = Bot(name,version,trigger,debug)
 	else:
-		myBot = Bot("Bot","0.1","!")
+		myBot = Bot("Bot","0.1","!","False")
 
 	#Startup prints
+	os.system("title Varas Bot - 1.3")
 	Utils.info()
 	Utils.logaction("Attaching to skype.")
 	try:
@@ -154,7 +172,15 @@ def main():
 		myBot.loadplugins()
 		Utils.action("Successfully loaded "+Utils.Cafe + str(len(myBot.plugins))+Utils.defcol +" plugins.")
 	except:
-		Utils.error("Couldn't load plugins.")
+		Utils.alert("Couldn't load plugins.")
+	Utils.logaction("Checking for updates...")
+	try:
+		if updater.check(ver)== True:
+			Utils.action("Varas is up to date!")
+		else:
+			Utils.alert("Update found! Type 'update' in console to update the bot.")
+	except:
+		Utils.alert("Couldn't check for updates.")
 	#Bot infos
 	Utils.logaction("Current trigger is " + Utils.Cafe+myBot.gettrigger()+Utils.defcol)
 	Utils.logaction("Current bot name is " + Utils.Cafe+myBot.getname()+Utils.defcol)
@@ -177,6 +203,13 @@ def main():
 			nm = cmd.split(" ")
 			myBot.setname(nm[1])
 			Utils.action("Changed name to "+Utils.Cafe+nm[1]+Utils.defcol)
+		if cmd.startswith("setdebug "):
+			db = cmd.split(" ")
+			if db[1] == "True" or db[1] == "False":
+				myBot.setdebug(db[1])
+				Utils.action("Changed Debug mode to "+Utils.Cafe+db[1]+Utils.defcol)
+			else:
+				Utils.alert("Debug mode must be True or False")
 		if cmd=="gettrigger":
 			Utils.action("Current trigger is: "+Utils.Cafe+myBot.gettrigger()+Utils.defcol)
 		if cmd=="getname":
@@ -185,13 +218,22 @@ def main():
 			Utils.action("Loaded plugins are: "+Utils.Cafe+myBot.getplugins()+Utils.defcol)
 		if cmd=="getversion":
 			Utils.action("Current version is: "+Utils.Cafe+myBot.getversion()+Utils.defcol)
+		if cmd=="getdebug":
+			Utils.action("Current debug mode is: "+Utils.Cafe+myBot.getdebug()+Utils.defcol)
 		if cmd=="reload":
 			Utils.action("Reloading "+Utils.Cafe+"plugins."+Utils.defcol)
 			myBot.plugins = []
 			myBot.loadplugins()
 			Utils.action("Done reloading.")
+		if cmd=="update":
+			Utils.action("Attempting to update, bot will close after update.")
+			Utils.action("Bot will close after being updated.")
+			if updater.check(ver)==True:
+				updater.update()
+			else:
+				Utils.alert("Varas it is already up to date")
 		if cmd=="help":
-			Utils.action("Available console commands are: "+Utils.Cafe+"help,reload,setversion <version>,getversion,setname <name>,getname,settrigger <trigger>,gettrigger,getplugins"+Utils.defcol)
+			Utils.action("Available console commands are: "+Utils.Cafe+"help,reload,setversion <version>,getversion,setname <name>,getname,settrigger <trigger>,gettrigger,setdebug <True/False>,getdebug,update,getplugins"+Utils.defcol)
 
 if __name__ == "__main__":
 	main()
