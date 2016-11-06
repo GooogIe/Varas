@@ -2,14 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """
-Help plugin for Vars
-
+Help plugin for Varas
 Author: Habb0n
-
 Last modified: November 2016
-
-
-Github: https://github.com/GooogIe
 """
 
 import os
@@ -18,10 +13,7 @@ from os.path import isfile, join
 
 desc = "Simple command that let you see all the bot plugins."
 
-if os.name == 'nt':
-	plugindir = os.getcwd()+"\Plugins"
-else:
-	plugindir = os.getcwd()+"/Plugins"
+plugindir = os.getcwd()+"/Plugins"
 
 def execute():
 	help= [f for f in listdir(plugindir) if isfile(join(plugindir, f))]
@@ -39,4 +31,4 @@ def execute():
 			help[i] = help[i]+" - "+dc
 			i +=1
 	help.sort()
-	return "Available Commands: \n"+"\n".join(help)
+	return "==========Available Commands============ \n"+"\n".join(help) +"========================================= "
