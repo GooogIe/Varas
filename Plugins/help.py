@@ -31,4 +31,4 @@ def execute():
 			help[i] = help[i]+" - "+dc
 			i +=1
 	help.sort()
-	return "==========Available Commands============ \n"+"\n".join(help) +"========================================= "
+	return "==========Available Commands=========== \n"+"\n".join(help) +"\n========================================"
