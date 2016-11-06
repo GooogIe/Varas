@@ -229,9 +229,9 @@ def main():
 			Utils.action("Attempting to update, bot will close after update.")
 			Utils.action("Bot will close after being updated.")
 			if updater.check(ver)==True:
-				updater.update()
+				Utils.action("Varas is up to date!")
 			else:
-				Utils.alert("Varas it is already up to date")
+				updater.update()
 		if cmd=="help":
 			Utils.action("Available console commands are: "+Utils.Cafe+"help,reload,setversion <version>,getversion,setname <name>,getname,settrigger <trigger>,gettrigger,setdebug <True/False>,getdebug,update,getplugins"+Utils.defcol)
 
