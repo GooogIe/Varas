@@ -2,21 +2,23 @@
 # -*- coding: utf-8 -*-
 
 """
-Updater module
+Updater Module for Varas
 
 Author: Neon
 
 Last modified: November 2016
 """
 
-
 import urllib2
 import os
 import sys
-
+import time
 #Don't write bytecodes file (.pyc)
 sys.dont_write_bytecode = True
 
+defcol = "\033[0m"
+red="\033[1;31m"
+green="\033[1;32m"
 
 #Check for updates
 def check(current):
@@ -39,7 +41,11 @@ def update():
 		botf = open("Bot.py","w")
 		botf.write(bot)
 		botf.close()
+		print red+"["+green+"+"+red+"] - "+defcol+"Bot.py overwritten."
 		utilsf = open("Utils.py","w")
 		utilsf.write(utils)
-		utilsf.close
+		utilsf.close()
+		print red+"["+green+"+"+red+"] - "+defcol+"Utils.py overwritten."
+		print red+"["+green+"-"+red+"] - "+defcol+"Quitting..."
+		time.sleep(1)
 		os.system("pkill python")
