@@ -1,9 +1,16 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+"""
+Utils module for Varas
+
+Author: Habb0n
+
+Last modified: November 2016
+"""
 import json
 import sys
-
+import Bot
 #Colors
 white="\033[1;37m"
 grey="\033[0;37m"
@@ -56,6 +63,6 @@ def info():
 	pinfo(red+'    \  / (_| | | | (_| \__ \ ')
 	pinfo(red+"     \/ \__,_|_|  \__,_|___/")
 	pinfo( ""+defcol)
-	pinfo(red+"Varas "+defcol+"Skype Bot.")
+	pinfo(red+"Varas "+str(Bot.ver)+defcol+" Skype Bot.")
 	pinfo("Coded by "+blue+"Neon "+defcol+"and "+yellow+"Gooogle.")
 	pinfo("Using "+green+"Python"+defcol+" 2.7.10.")
