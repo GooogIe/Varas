@@ -47,7 +47,7 @@ def execute(one,two,three,four):
 
 ### You can find me on:
 
-* [Holeboards](www.holeboards.eu)
-* [Telegram](www.telegram.me/GooogIe)
+* [Holeboards](http://www.holeboards.eu/User-u0qq%C9%90H)
+* [Telegram](http://www.telegram.me/DonaldTrvmp)
 * Skype: pybot.py
 
