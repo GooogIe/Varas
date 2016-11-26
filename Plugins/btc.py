@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Isup plugin for Varas
+Btc plugin for Varas
 Author: Neon
 Last modified: November 2016
 """
